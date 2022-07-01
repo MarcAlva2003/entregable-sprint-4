@@ -57,7 +57,7 @@ def ingresarDni():
 def StartApp():
     valores = ingresarValores()
     print(valores)
-    # data : [header, content] = abrirArchivoCsv(valores[0])
+    # data : [header, content] = abrirArchivoCsv(valores[0]) -> Cerrar archivo
     # if(checkDni(dni, content) -> return boolean)
     #   true -> sigue
     #   false -> tire error
@@ -66,8 +66,9 @@ def StartApp():
                 #  content = filtrarPorTipoCheque(valores[3], content)
                 #  if(data[4] -> es un input salteado -> false -> usar filtro
                 #   data[4] -> es un input salteado -> true -> NO usar filtro
-                    
                 #   data[5] -> es un input salteado -> false -> usar filtro
                 #   data[5] -> es un input salteado -> true -> NO usar filtro)
+
+    # retornarValores(dataFiltrada, valores[2])
 
 StartApp()
