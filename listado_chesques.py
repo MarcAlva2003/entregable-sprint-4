@@ -38,7 +38,7 @@ def StartApp():
     valores = ingresarValores()
     data = abrirArchivoCSV(valores[0])
     print (data)
-    # if(checkDni(dni, content) -> return boolean)
+    # if(checkDni(valores[1], data[1]) -> return boolean)
     #   true -> sigue
     #   false -> tire error
     # dataFiltrada = obtenerDataFiltrada(valores[], content[]) -> Obtener cheques que cumplan con los filtros
