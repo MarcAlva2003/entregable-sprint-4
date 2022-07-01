@@ -33,11 +33,23 @@ def abrirArchivoCSV (nombreArchivo) :
             listado. append (row)
     return [header, listado]
 
+def checkDni (dni, content, indexDNI, indexNroCheque) :
+    # print (dni, content, indexDNI, indexNroCheque)
+    nrosCheques = []
+    for row in content: 
+        if row[indexDNI] == dni:
+            if row[indexNroCheque] in nrosCheques:
+                return False
+            else: 
+                nrosCheques.append(row[indexNroCheque]) 
+    
+    return True
 
 def StartApp():
     valores = ingresarValores()
     data = abrirArchivoCSV(valores[0])
-    print (data)
+    if not(checkDni (valores[1], data[1], data[0].index("DNI"), data[0].index("NroCheque"))) :
+        print ("El numero de cheque se repite con el mismo DNI")
     # if(checkDni(valores[1], data[1]) -> return boolean)
     #   true -> sigue
     #   false -> tire error
