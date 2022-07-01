@@ -4,7 +4,26 @@ import csv
 
 
 def ingresarValores():
-    dni = input('Ingrese el DNI')
+    nombreArchivo = input("Ingresa el nombre del archivo : ")
+    dni = input('Ingrese el DNI : ')
+    while not( str.isdigit(dni)):
+        input("Ingrese un DNI Valido : ")
+    salida = input('ingresa "P" para Pantalla o "CSV" para obtener el archivo : ')
+    while (salida != "P" and salida != "CSV") or salida == "":
+        salida = input('Ingrese un valor correcto(P o CSV)')
+    tipoCheque = input("Cheque EMITIDO o DEPOSITADO? : ")
+    while (tipoCheque != "EMITIDO" and tipoCheque != "DEPOSITADO") or tipoCheque == "":
+        tipoCheque = input('Ingrese un valor correcto(EMITIDO O DEPOSITADO)')
+    estadoCheque = input("PENDIENTE, APROBADO, RECHAZADO : ")
+    while estadoCheque!= "PENDIENTE" and estadoCheque != "APROBADO" and estadoCheque != "RECHAZADO" and estadoCheque != "" :
+        estadoCheque = input('Ingrese un valor correcto(PENDIENTE, APROBADO O RECHAZADO)')
+    fechaInicio = input("Inicio: DD-MM-AAAA ")
+    fechaVencimiento = input("Vencimiento: DD-MM-AAAA ")
+    rangoFecha = fechaInicio + ":" + fechaVencimiento
+
+    return [nombreArchivo, dni, salida, tipoCheque, estadoCheque, rangoFecha]
+
+
     # a. Nombre del archivo csv.
     # b. DNI del cliente donde se filtraran.
     # c. Salida: PANTALLA o CSV
@@ -37,6 +56,7 @@ def ingresarDni():
 
 def StartApp():
     valores = ingresarValores()
+    print(valores)
     # data : [header, content] = abrirArchivoCsv(valores[0])
     # if(checkDni(dni, content) -> return boolean)
     #   true -> sigue
