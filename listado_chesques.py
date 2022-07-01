@@ -1,4 +1,5 @@
 import csv
+from tkinter import Variable
 
 
 
@@ -23,21 +24,33 @@ def ingresarValores():
 
     return [nombreArchivo, dni, salida, tipoCheque, estadoCheque, rangoFecha]
 
+def abrirArchivoCSV (nombreArchivo) :
+    archivo = open (nombreArchivo, 'r')
+    reader = csv.reader (archivo)
+    #for row in reader: print (row) 
+    header = []
+    contador = 0
 
-    # a. Nombre del archivo csv.
-    # b. DNI del cliente donde se filtraran.
-    # c. Salida: PANTALLA o CSV
-    # d. Tipo de cheque: EMITIDO o DEPOSITADO
-    # e. Estado del cheque: PENDIENTE, APROBADO, RECHAZADO. (Opcional)
-    # f. Rango fecha: xx-xx-xxxx:yy-yy-yyyy (Opcional)
-    
-    # return nombre (Lista con las respuestas de los inputs)
-    # valores = ['Nombre archivo', dni]
-    pass
+    listado = []
+      
+    for row in reader:
+        if contador == 0:
+            header = row
+            contador += 1
+        
+        else: 
+            listado. append (row)
 
-def abrirArchivoCsv(nombre):
-    archivo = open(nombre,'r')
-    reader = csv.reader(archivo)
+
+
+
+
+    return [header, listado]
+
+
+#def abrirArchivoCsv(nombre):
+    #archivo = open(nombre,'r')
+    #reader = csv.reader(archivo)
 
 
 def ingresarDni():
@@ -56,8 +69,8 @@ def ingresarDni():
 
 def StartApp():
     valores = ingresarValores()
-    print(valores)
-    # data : [header, content] = abrirArchivoCsv(valores[0]) -> Cerrar archivo
+    data = abrirArchivoCSV(valores[0])
+    print (data) 
     # if(checkDni(dni, content) -> return boolean)
     #   true -> sigue
     #   false -> tire error
