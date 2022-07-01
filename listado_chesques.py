@@ -7,7 +7,7 @@ def ingresarValores():
     nombreArchivo = input("Ingresa el nombre del archivo : ")
     dni = input('Ingrese el DNI : ')
     while not( str.isdigit(dni)):
-        input("Ingrese un DNI Valido : ")
+        dni = input("Ingrese un DNI Valido : ")
     salida = input('ingresa "P" para Pantalla o "CSV" para obtener el archivo : ')
     while (salida != "P" and salida != "CSV") or salida == "":
         salida = input('Ingrese un valor correcto(P o CSV)')
