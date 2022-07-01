@@ -1,8 +1,4 @@
 import csv
-from tkinter import Variable
-
-
-
 
 def ingresarValores():
     nombreArchivo = input("Ingresa el nombre del archivo : ")
@@ -21,56 +17,27 @@ def ingresarValores():
     fechaInicio = input("Inicio: DD-MM-AAAA ")
     fechaVencimiento = input("Vencimiento: DD-MM-AAAA ")
     rangoFecha = fechaInicio + ":" + fechaVencimiento
-
     return [nombreArchivo, dni, salida, tipoCheque, estadoCheque, rangoFecha]
 
 def abrirArchivoCSV (nombreArchivo) :
     archivo = open (nombreArchivo, 'r')
     reader = csv.reader (archivo)
-    #for row in reader: print (row) 
     header = []
-    contador = 0
-
     listado = []
-      
+    contador = 0
     for row in reader:
         if contador == 0:
             header = row
             contador += 1
-        
         else: 
             listado. append (row)
-
-
-
-
-
     return [header, listado]
 
-
-#def abrirArchivoCsv(nombre):
-    #archivo = open(nombre,'r')
-    #reader = csv.reader(archivo)
-
-
-def ingresarDni():
-    dniIngresado = int(input("Ingrese DNI"))
-
-# def Prueba():
-#     variable = input('Ingresa la variable REY: ')
-#     contador=0
-#     for row in reader:
-#         if contador == 0:
-#             posicion = row.index(variable)
-#             contador += 1
-
-#         if dni in row:
-#             print(row[posicion])
 
 def StartApp():
     valores = ingresarValores()
     data = abrirArchivoCSV(valores[0])
-    print (data) 
+    print (data)
     # if(checkDni(dni, content) -> return boolean)
     #   true -> sigue
     #   false -> tire error
