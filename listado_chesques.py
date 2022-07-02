@@ -13,19 +13,33 @@ def abrirArchivoCSV(nombreArchivo):
             contador += 1
         else: 
             listado.append(row)
+    return [header] + listado
+
+def abrirArchivoCSV2(nombreArchivo):
+    archivo = open(nombreArchivo, 'r')
+    reader = csv.reader(archivo)
+    header = []
+    listado = []
+    contador = 0
+    for row in reader:
+        if contador == 0:
+            header = row
+            contador += 1
+        else: 
+            listado.append(row)
     return [header, listado]
 
-def checkDni (dni, content, indexDNI, indexNroCheque) :
-    # print (dni, content, indexDNI, indexNroCheque)
-    nrosCheques = []
-    for row in content: 
-        if row[indexDNI] == dni:
-            if row[indexNroCheque] in nrosCheques:
-                return False
-            else: 
-                nrosCheques.append(row[indexNroCheque]) 
+# def checkDni (dni, content, indexDNI, indexNroCheque) :
+#     # print (dni, content, indexDNI, indexNroCheque)
+#     nrosCheques = []
+#     for row in content: 
+#         if row[indexDNI] == dni:
+#             if row[indexNroCheque] in nrosCheques:
+#                 return False
+#             else: 
+#                 nrosCheques.append(row[indexNroCheque]) 
     
-    return True
+#     return True
 
 def StartApp():
     valores = ingresarValores()
@@ -48,18 +62,23 @@ def StartApp():
 #StartApp()
 
 #------------------------------------------------------------------------------------------------
-
-def ingresarValores():
+def obtenerTipoCheque():
     tipoCheque = input("Cheque EMITIDO o DEPOSITADO? : ")
     while (tipoCheque != "EMITIDO" and tipoCheque != "DEPOSITADO") or tipoCheque == "":
         tipoCheque = input('Ingrese un valor correcto(EMITIDO O DEPOSITADO)')
+    return tipoCheque
+
+def ontenerEstadoCheque():
     estadoCheque = input("PENDIENTE, APROBADO, RECHAZADO : ")
     while estadoCheque!= "PENDIENTE" and estadoCheque != "APROBADO" and estadoCheque != "RECHAZADO" and estadoCheque != "" :
         estadoCheque = input('Ingrese un valor correcto(PENDIENTE, APROBADO O RECHAZADO)')
+    return estadoCheque
+
+def obtenerRangoFecha():
     fechaInicio = input("Inicio: DD-MM-AAAA ")
     fechaVencimiento = input("Vencimiento: DD-MM-AAAA ")
     rangoFecha = fechaInicio + ":" + fechaVencimiento
-    return [nombreArchivo, dni, salida, tipoCheque, estadoCheque, rangoFecha]
+    return rangoFecha
 
 def abrirArchivoCSV(nombreArchivo):
     """Abre el archivo y retorna el encabezado y crea una lista con los datos """
@@ -89,6 +108,19 @@ def iniciarData():
             condicion = False 
             return abrirArchivoCSV(nombreArchivo)
 
+def iniciarData2():
+    """Confirma el nombre del Archivo y llama a la funcion "Abrir archivo" """
+    validacion_archivo = input('Si el nombre del archivo a trabajar es data.csv ingrese SI de otra manera NO:  ')
+    condicion = True
+    while condicion:
+        if validacion_archivo == 'SI' or validacion_archivo == 'si':
+            condicion = False
+            return abrirArchivoCSV2('data.csv')
+        elif validacion_archivo == 'NO' or validacion_archivo == 'no':
+            nombreArchivo = input("Ingresa el nombre del archivo : ")
+            condicion = False 
+            return abrirArchivoCSV2(nombreArchivo)
+
 def variableDNI():
     """ ingresa el DNI y lo guarda en una variable """
     variable_dni = input("Numero DNI : ")
@@ -103,7 +135,7 @@ def checkDni (dni, content, indexDNI, indexNroCheque) :
     for row in content: 
         if row[indexDNI] == dni:
             if row[indexNroCheque] in nrosCheques:
-                return False
+                print ("El numero de cheque se repite con el mismo DNI")
             else: 
                 nrosCheques.append(row[indexNroCheque]) 
     
@@ -118,7 +150,7 @@ def tipo_Salida():
 
 def dato_filtrado_por_dni(dni,datos):
     
-    formato = '{opcion:^10s} {dato_buscado:^10s}'
+    formato = '{opcion:^10s} {dato_buscado:^10s}'   
     print('Ingrese el numero de la opcion que desee conocer:\n')
     print(formato.format(opcion = 'Opcion\n',dato_buscado =''))
 
@@ -141,16 +173,23 @@ def dato_filtrado_por_dni(dni,datos):
 
 def StartApp2():
     """Inicia la App"""
-    lista_datos = iniciarData()
-    dni_ingresado = variableDNI()
-    dato_filtrado = dato_filtrado_por_dni(dni_ingresado,lista_datos)
+    # lista_datos = iniciarData()
+    lista_datos2 = iniciarData2() # = [ header, content[] ]
+    dni_ingresado = variableDNI() # = dni
+    salida = tipo_Salida() # = salida
+    tipoCheque = obtenerTipoCheque() # = tipoCheque
+    estadoCheque = ontenerEstadoCheque() # = estadoCheque o ''
+    rangoFecha = obtenerRangoFecha() # = rangoFecha o ''
+    checkDni(dni_ingresado, lista_datos2[1], lista_datos2[0].index("DNI"), lista_datos2[0].index("NroCheque"))
+    # dataFiltrada = filtro(dni, tipoCheque, estado, rango, lista_datos2)
 
-    #filtrado()
+    dataFiltradaMock = ['0002','55','44','2432432423','343434343','5559,76','1620183371','1620183371','23665789','EMITIDO','PENDIENTE']
+
+    # mostrarValres(dataFiltradaMock, salida);
 
 
-    #salida = tipo_Salida()
-    
-    
+    # dato_filtrado = dato_filtrado_por_dni(dni_ingresado,lista_datos)
+
     # data = abrirArchivoCSV(valores[0])
     # if not(checkDni (valores[1], data[1], data[0].index("DNI"), data[0].index("NroCheque"))) :
     #     print ("El numero de cheque se repite con el mismo DNI")
