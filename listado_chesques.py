@@ -135,12 +135,9 @@ def dato_filtrado_por_dni(dni,datos):
         else:
             print('Opcion no valida, vuelva a ingresar la opcion')
 
-    indice = indice_elegido
-    print('Este es el valor ingresado',indice)
-
     for fila in datos:
         if dni in fila:
-            return fila[indice]
+            return fila[indice_elegido]
 
 def StartApp2():
     """Inicia la App"""
