@@ -1,32 +1,5 @@
 import csv
 
-
-def abrirArchivoCSV(nombreArchivo):
-    archivo = open(nombreArchivo, 'r')
-    reader = csv.reader(archivo)
-    header = []
-    listado = []
-    contador = 0
-    for row in reader:
-        if contador == 0:
-            header = row
-            contador += 1
-        else: 
-            listado.append(row)
-    return [header, listado]
-
-def checkDni (dni, content, indexDNI, indexNroCheque) :
-    # print (dni, content, indexDNI, indexNroCheque)
-    nrosCheques = []
-    for row in content: 
-        if row[indexDNI] == dni:
-            if row[indexNroCheque] in nrosCheques:
-                return False
-            else: 
-                nrosCheques.append(row[indexNroCheque]) 
-    
-    return True
-
 def StartApp():
     valores = ingresarValores()
     data = abrirArchivoCSV(valores[0])
