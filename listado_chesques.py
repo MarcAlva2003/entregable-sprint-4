@@ -76,6 +76,19 @@ def abrirArchivoCSV(nombreArchivo):
             listado.append(row)
     return [header] + listado
 
+def iniciarData():
+    """Confirma el nombre del Archivo y llama a la funcion "Abrir archivo" """
+    validacion_archivo = input('Si el nombre del archivo a trabajar es data.csv ingrese SI de otra manera NO:  ')
+    condicion = True
+    while condicion:
+        if validacion_archivo == 'SI' or validacion_archivo == 'si':
+            condicion = False
+            return abrirArchivoCSV('data.csv')
+        elif validacion_archivo == 'NO' or validacion_archivo == 'no':
+            nombreArchivo = input("Ingresa el nombre del archivo : ")
+            condicion = False 
+            return abrirArchivoCSV(nombreArchivo)
+
 def variableDNI():
     """ ingresa el DNI y lo guarda en una variable """
     variable_dni = input("Numero DNI : ")
@@ -102,6 +115,32 @@ def tipo_Salida():
     while (salida != "P" and salida != "CSV") or salida == "":
         salida = input('Ingrese un valor correcto(P o CSV)')
     return salida
+
+def dato_filtrado_por_dni(dni,datos):
+    
+    formato = '{opcion:^10s} {dato_buscado:^10s}'
+    print('Ingrese el numero de la opcion que desee conocer:\n')
+    print(formato.format(opcion = 'Opcion\n',dato_buscado =''))
+
+    nro_opcion = -1
+    for elemento in datos[0]:
+        nro_opcion += 1
+        print(formato.format(opcion=str(nro_opcion),dato_buscado=str(elemento)))
+    
+    condicion = True
+    while condicion:
+        indice_elegido = int(input('Ingresa el valor REY: '))
+        if indice_elegido <= nro_opcion and indice_elegido >= 0: 
+            condicion = False
+        else:
+            print('Opcion no valida, vuelva a ingresar la opcion')
+
+    indice = indice_elegido
+    print('Este es el valor ingresado',indice)
+
+    for fila in datos:
+        if dni in fila:
+            return fila[indice]
 
 def StartApp2():
     """Inicia la App"""
