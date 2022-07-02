@@ -149,8 +149,8 @@ def tipo_Salida():
     return salida
 
 def dato_filtrado_por_dni(dni,datos):
-    
-    formato = '{opcion:^10s} {dato_buscado:^10s}'   
+    """Toma un dni y una lista de datos y retorna la variable buscada"""
+    formato = '{opcion:^10s} {dato_buscado:^10s}'
     print('Ingrese el numero de la opcion que desee conocer:\n')
     print(formato.format(opcion = 'Opcion\n',dato_buscado =''))
 
