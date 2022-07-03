@@ -1,9 +1,6 @@
 import csv
 import datetime
 
-from sympy import Si
-
-
 def abrir_guardar_datos(nombreArchivo):
     """Abre el archivo, guarda los datos en una lista y lo cierra"""
 
@@ -42,7 +39,7 @@ def iniciarData():
 def verificarDNI(dni_Ingresado):
     valido = True
     print(len(dni_Ingresado))
-    if not(str.isdigit(dni_Ingresado)) or not(len(dni_Ingresado) < 9) or not(len(dni_Ingresado) > 6):
+    if not(str.isdigit(dni_Ingresado)) or not(len(dni_Ingresado) < 11) or not(len(dni_Ingresado) > 6):
         valido = False
     print(len(dni_Ingresado))
     return valido
@@ -61,7 +58,6 @@ def variableDNI():
 
 def checkDni (dni, content, indexDNI, indexNroCheque):
     """Corrobora si el cheque esta repetido para el mismo DNI"""
-
     nrosCheques = []
     for row in content: 
         if row[indexDNI] == dni:
@@ -243,9 +239,7 @@ def StartApp():
     estadoCheque = ontenerEstadoCheque(dni_ingresado,tipoCheque) # = estadoCheque o ''
     rangoFecha = obtenerRangoFecha() # = rangoFecha o ''
     checkDni(dni_ingresado, lista_datos[1], lista_datos[0].index("DNI"), lista_datos[0].index("NroCheque"))
-    fechaInicioMock = ''
-    fechaFinMock = ''
-    dataFiltrada = filtro(dni_ingresado, tipoCheque, estadoCheque, fechaInicioMock, fechaFinMock, lista_datos)
+    dataFiltrada = filtro(dni_ingresado, tipoCheque, estadoCheque, rangoFecha[0], rangoFecha[1], lista_datos)
     for row in dataFiltrada:
         print(row)
 
@@ -278,7 +272,7 @@ def StartApp():
     # if not(checkDni (valores[1], data[1], data[0].index("DNI"), data[0].index("NroCheque"))) :
     #     print ("El numero de cheque se repite con el mismo DNI")
 
-#StartApp()
+StartApp()
 
 
 
