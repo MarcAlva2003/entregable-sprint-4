@@ -1,4 +1,5 @@
 import csv
+import datetime
 
 from sympy import Si
 
@@ -84,7 +85,7 @@ def tipo_Salida():
     return salida
 
 # # # # # # # # # # # 
-# INICIO FILTRO
+# INICIO FILTRO     #
 # # # # # # # # # # # 
 
 def filtroPorDni(dni, indexDni, data):
@@ -140,7 +141,7 @@ def filtro(dni, tipoCheque, estadoCheque, fechaInicio, fechaFin, data):
     return lineasARetornar
 
 # # # # # # # # # # # 
-# FIN FILTRO
+# FIN FILTRO        #
 # # # # # # # # # # # 
 
 def ontenerEstadoCheque(dni,tipo_cheque):
@@ -165,14 +166,67 @@ def obtenerTipoCheque():
     return tipoCheque
 
 
+
+
+def validarFechaInicio():
+    """Verifica que la fecha de inicio del cheque sea Valida"""
+    fechaInicio = input("Inicio : DD-MM-AAAA ")
+    try:
+        fechaSeparada = fechaInicio.split('-')
+        fechaAlReves = fechaSeparada[2] + '-' + fechaSeparada[1] + '-' + fechaSeparada[0]
+    except:
+        
+        fechaAlReves = ''
+    fechaIncorrecta = True
+
+    while fechaIncorrecta:
+        try:    
+            datetime.datetime.strptime(fechaAlReves, '%Y-%m-%d')
+            fechaIncorrecta = False
+            return fechaInicio
+        except:
+            fechaInicio = input("Ingrese una fecha de inicio Valida : DD-MM-AAAA ")
+            try:
+                fechaSeparada = fechaInicio.split('-')
+                fechaAlReves = fechaSeparada[2] + '-' + fechaSeparada[1] + '-' + fechaSeparada[0]
+            except:
+                fechaAlReves = ''
+
+def validarFechaVto():
+    """Verifica que la fecha de vencimiento del cheque sea Valida"""
+    fechaInicio = input("Vencimiento : DD-MM-AAAA ")
+    try:
+        fechaSeparada = fechaInicio.split('-')
+        fechaAlReves = fechaSeparada[2] + '-' + fechaSeparada[1] + '-' + fechaSeparada[0]
+    except:
+        
+        fechaAlReves = ''
+    fechaIncorrecta = True
+
+    while fechaIncorrecta:
+        try:    
+            datetime.datetime.strptime(fechaAlReves, '%Y-%m-%d')
+            fechaIncorrecta = False
+            return fechaInicio
+        except:
+            fechaInicio = input("Ingrese una fecha de vencimiento valida : DD-MM-AAAA ")
+            try:
+                fechaSeparada = fechaInicio.split('-')
+                fechaAlReves = fechaSeparada[2] + '-' + fechaSeparada[1] + '-' + fechaSeparada[0]
+            except:
+                fechaAlReves = ''
+
+
 def obtenerRangoFecha():
-    """Asigna manualmente una fecha de inicio y vencimiento a un cheque"""
+    """Retorna ambas fechas en una lista """
+    ingresarFecha = input('¿Desea ingresar fecha de inicio y fecha de vencimiento?: S/N')
+    if(ingresarFecha  == 'S'):
+        fechaInicio = validarFechaInicio()
+        fechaVto = validarFechaVto()
+    else:
+        return ["",""]
 
-    fechaInicio = input("Inicio: DD-MM-AAAA ")
-    fechaVencimiento = input("Vencimiento: DD-MM-AAAA ")
-    rangoFecha = fechaInicio + ":" + fechaVencimiento
-
-    return rangoFecha
+    return [fechaInicio, fechaVto] 
 
 #def cerrar_archivo():
     #lista_datos.close()
