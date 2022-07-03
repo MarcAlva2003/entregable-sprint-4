@@ -171,6 +171,40 @@ def dato_filtrado_por_dni(dni,datos):
         if dni in fila:
             return fila[indice_elegido]
 
+# # # # # # # # # # # 
+# INICIO FILTRO
+# # # # # # # # # # # 
+
+def isDni(dni, indexDni, row):
+    pass
+
+def filtrarPorTipo(tipo, indexTipo, data):
+    pass
+
+def filtro(dni, tipoCheque, estadoCheque, rangoFecha, data):
+    """Filtra la data que se obtinee de data.csv utilizando los parametros ingresados por el cliente"""
+    lineasARetornar = []
+    indexDni = data[0].index("DNI")
+    indexTipo  = data[0].index('Tipo')
+    
+    lista = filtrarDni(data, dni, indexDni)
+    lista = filtratTipoCheque(lista, tipo indexTIPO)
+    if not(fecha == ''):
+        lista = filtratFecha(lista, tipo indexTIPO)
+    retutn listra
+    
+
+    for row in data[1]:
+        if (row[indexDni] == dni) and (row[indexTipo] == tipoCheque):
+            lineasARetornar.append(row)
+    
+    return lineasARetornar
+
+# # # # # # # # # # # 
+# FIN FILTRO
+# # # # # # # # # # # 
+
+
 def StartApp2():
     """Inicia la App"""
     # lista_datos = iniciarData()
@@ -181,14 +215,32 @@ def StartApp2():
     estadoCheque = ontenerEstadoCheque() # = estadoCheque o ''
     rangoFecha = obtenerRangoFecha() # = rangoFecha o ''
     checkDni(dni_ingresado, lista_datos2[1], lista_datos2[0].index("DNI"), lista_datos2[0].index("NroCheque"))
-    # dataFiltrada = filtro(dni, tipoCheque, estado, rango, lista_datos2)
+    dataFiltrada = filtro(dni_ingresado, tipoCheque, estadoCheque, rangoFecha, lista_datos2)
+    for row in dataFiltrada:
+        print(row)
 
-    dataFiltradaMock = ['0002','55','44','2432432423','343434343','5559,76','1620183371','1620183371','23665789','EMITIDO','PENDIENTE']
+    # NO BORRAR XD
+    # for row in dataFiltrada:
+    #     indice = 0
+    #     cadena = ''
+    #     for item in row:
+    #         cadena += lista_datos2[0][indice] + ' : ' + item + ' - '
+    #         indice += 1
+    #     print(cadena)
+
+    header =  ['NroCheque','CodigoBanco','CodigoScurusal','NumeroCuentaOrigen','NumeroCuentaDestino','Valor','FechaOrigen','FechaPago','DNI','Tipo','Estado']
+    dataFiltradaMock = [
+        ['0002','55','44','2432432423','343434343','5559,76','1620183371','1620183371','23665789','EMITIDO','PENDIENTE'],
+        ['0002','55','44','2432432423','343434343','5559,76','1620183371','1620183371','23665789','EMITIDO','PENDIENTE'],
+        ['0002','55','44','2432432423','343434343','5559,76','1620183371','1620183371','23665789','EMITIDO','PENDIENTE'],
+        ['0002','55','44','2432432423','343434343','5559,76','1620183371','1620183371','23665789','EMITIDO','PENDIENTE'],
+        ]
 
     # mostrarValres(dataFiltradaMock, salida);
 
 
     # dato_filtrado = dato_filtrado_por_dni(dni_ingresado,lista_datos)
+    # print(dato_filtrado)
 
     # data = abrirArchivoCSV(valores[0])
     # if not(checkDni (valores[1], data[1], data[0].index("DNI"), data[0].index("NroCheque"))) :
