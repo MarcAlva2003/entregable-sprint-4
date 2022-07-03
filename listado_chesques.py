@@ -1,4 +1,6 @@
 import csv
+from operator import index
+from sqlite3 import Row
 
 
 def abrir_guardar_datos(nombreArchivo):
@@ -147,7 +149,7 @@ def StartApp():
     # lista_lista_datos = iniciarData()
     lista_datos = iniciarData() # = [ header, content[] ]
     dni_ingresado = variableDNI() # = dni
-    Estado_de_cheques(dni_ingresado,lista_datos)
+    # Estado_de_cheques(dni_ingresado,lista_datos)
     salida = tipo_Salida() # = salida
 
     tipoCheque = obtenerTipoCheque() # = tipoCheque
@@ -169,7 +171,7 @@ def StartApp():
 
 
     header =  ['NroCheque','CodigoBanco','CodigoScurusal','NumeroCuentaOrigen','NumeroCuentaDestino','Valor','FechaOrigen','FechaPago','DNI','Tipo','Estado']
-    
+
     dataFiltradaMock = [
         ['0002','55','44','2432432423','343434343','5559,76','1620183371','1620183371','23665789','EMITIDO','PENDIENTE'],
         ['0002','55','44','2432432423','343434343','5559,76','1620183371','1620183371','23665789','EMITIDO','PENDIENTE'],
@@ -177,8 +179,9 @@ def StartApp():
         ['0002','55','44','2432432423','343434343','5559,76','1620183371','1620183371','23665789','EMITIDO','PENDIENTE'],
     ]
 
-    # mostrarValres(dataFiltradaMock, salida);
+    # indexCuenta = header.index("")
 
+    # mostrarValres(dataFiltradaMock, salida);
 
     # dato_filtrado = dato_filtrado_por_dni(dni_ingresado,lista_datos)
     # print(dato_filtrado)
