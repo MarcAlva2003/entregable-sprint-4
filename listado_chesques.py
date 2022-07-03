@@ -1,34 +1,6 @@
 import csv
 
 
-def abrirArchivoCSV(nombreArchivo):
-    archivo = open(nombreArchivo, 'r')
-    reader = csv.reader(archivo)
-    header = []
-    listado = []
-    contador = 0
-    for row in reader:
-        if contador == 0:
-            header = row
-            contador += 1
-        else: 
-            listado.append(row)
-    return [header] + listado
-
-def abrirArchivoCSV2(nombreArchivo):
-    archivo = open(nombreArchivo, 'r')
-    reader = csv.reader(archivo)
-    header = []
-    listado = []
-    contador = 0
-    for row in reader:
-        if contador == 0:
-            header = row
-            contador += 1
-        else: 
-            listado.append(row)
-    return [header, listado]
-
 # def checkDni (dni, content, indexDNI, indexNroCheque) :
 #     # print (dni, content, indexDNI, indexNroCheque)
 #     nrosCheques = []
@@ -62,26 +34,24 @@ def StartApp():
 #StartApp()
 
 #------------------------------------------------------------------------------------------------
-def obtenerTipoCheque():
-    tipoCheque = input("Cheque EMITIDO o DEPOSITADO? : ")
-    while (tipoCheque != "EMITIDO" and tipoCheque != "DEPOSITADO") or tipoCheque == "":
-        tipoCheque = input('Ingrese un valor correcto(EMITIDO O DEPOSITADO)')
-    return tipoCheque
-
-def ontenerEstadoCheque():
-    estadoCheque = input("PENDIENTE, APROBADO, RECHAZADO : ")
-    while estadoCheque!= "PENDIENTE" and estadoCheque != "APROBADO" and estadoCheque != "RECHAZADO" and estadoCheque != "" :
-        estadoCheque = input('Ingrese un valor correcto(PENDIENTE, APROBADO O RECHAZADO)')
-    return estadoCheque
-
-def obtenerRangoFecha():
-    fechaInicio = input("Inicio: DD-MM-AAAA ")
-    fechaVencimiento = input("Vencimiento: DD-MM-AAAA ")
-    rangoFecha = fechaInicio + ":" + fechaVencimiento
-    return rangoFecha
 
 def abrirArchivoCSV(nombreArchivo):
     """Abre el archivo y retorna el encabezado y crea una lista con los datos """
+    archivo = open(nombreArchivo, 'r')
+    reader = csv.reader(archivo)
+    header = []
+    listado = []
+    condision = True
+    for row in reader:
+        if condision == 0:
+            header = row
+            condision = False
+        else: 
+            listado.append(row)
+    return [header] + listado
+
+
+def abrirArchivoCSV2(nombreArchivo):
     archivo = open(nombreArchivo, 'r')
     reader = csv.reader(archivo)
     header = []
@@ -93,7 +63,8 @@ def abrirArchivoCSV(nombreArchivo):
             contador += 1
         else: 
             listado.append(row)
-    return [header] + listado
+    return [header, listado]
+
 
 def iniciarData():
     """Confirma el nombre del Archivo y llama a la funcion "Abrir archivo" """
@@ -108,6 +79,7 @@ def iniciarData():
             condicion = False 
             return abrirArchivoCSV(nombreArchivo)
 
+
 def iniciarData2():
     """Confirma el nombre del Archivo y llama a la funcion "Abrir archivo" """
     validacion_archivo = input('Si el nombre del archivo a trabajar es data.csv ingrese SI de otra manera NO:  ')
@@ -121,6 +93,7 @@ def iniciarData2():
             condicion = False 
             return abrirArchivoCSV2(nombreArchivo)
 
+
 def variableDNI():
     """ ingresa el DNI y lo guarda en una variable """
     variable_dni = input("Numero DNI : ")
@@ -128,6 +101,7 @@ def variableDNI():
         print("Dni no valido")
         variable_dni = input("Numero DNI : ")        
     return variable_dni
+
 
 def checkDni (dni, content, indexDNI, indexNroCheque) :
     # print (dni, content, indexDNI, indexNroCheque)
@@ -141,12 +115,14 @@ def checkDni (dni, content, indexDNI, indexNroCheque) :
     
     return True
 
+
 def tipo_Salida():
     """Selecciona salida por pantalla o un archivo CSV """
     salida = input('ingresa "P" para Pantalla o "CSV" para obtener el archivo : ')
     while (salida != "P" and salida != "CSV") or salida == "":
         salida = input('Ingrese un valor correcto(P o CSV)')
     return salida
+
 
 def dato_filtrado_por_dni(dni,datos):
     """Toma un dni y una lista de datos y retorna la variable buscada"""
@@ -187,11 +163,11 @@ def filtro(dni, tipoCheque, estadoCheque, rangoFecha, data):
     indexDni = data[0].index("DNI")
     indexTipo  = data[0].index('Tipo')
     
-    lista = filtrarDni(data, dni, indexDni)
-    lista = filtratTipoCheque(lista, tipo indexTIPO)
-    if not(fecha == ''):
-        lista = filtratFecha(lista, tipo indexTIPO)
-    retutn listra
+    # lista = filtrarDni(data, dni, indexDni)
+    # lista = filtratTipoCheque(lista, tipo indexTIPO)
+    # if not(fecha == ''):
+    #     lista = filtratFecha(lista, tipo indexTIPO)
+    # retutn listra
     
 
     for row in data[1]:
@@ -205,20 +181,73 @@ def filtro(dni, tipoCheque, estadoCheque, rangoFecha, data):
 # # # # # # # # # # # 
 
 
+def dato_filtrado_por_dni_2(dni,lista_datos,dato):
+    """Toma un dni y una lista de lista_datos y retorna la variable buscada"""
+    
+    print(lista_datos[0])
+    indice_dato = -1
+    for elemento in lista_datos[0]:
+        indice_dato += 1
+        if elemento == dato:
+            break
+
+    indice_dni = -1
+    for elemento in lista_datos[0]:
+        indice_dato += 1
+        print(elemento)
+        if elemento == 'DNI':
+            break
+
+    lista_auxiliar = [] #lista donde se guardan los mismos datos solicitados para un DNI
+    for fila in lista_datos[1]:
+        if dni == fila[indice_dni]:
+            lista_auxiliar.append(fila[indice_dato])
+    return print(lista_auxiliar)
+
+
+def obtenerTipoCheque():
+    """Ingreso de tipo de cheque"""
+    tipoCheque = input("Cheque EMITIDO o DEPOSITADO? : ")
+    while (tipoCheque != "EMITIDO" and tipoCheque != "DEPOSITADO") or tipoCheque == "":
+        tipoCheque = input('Ingrese un valor correcto(EMITIDO O DEPOSITADO)')
+    return tipoCheque
+
+
+def ontenerEstadoCheque(dni,tipo_cheque):
+    """Obtiene a partir de un dni y el tipo de cheque su estado"""
+
+    # estadoCheque = input("PENDIENTE, APROBADO, RECHAZADO : ")
+    # while estadoCheque != "PENDIENTE" and estadoCheque != "APROBADO" and estadoCheque != "RECHAZADO" and estadoCheque != "" :
+    #     estadoCheque = input('Ingrese un valor correcto(PENDIENTE, APROBADO O RECHAZADO)')
+    # return estadoCheque
+
+
+def obtenerRangoFecha():
+    """Asigna manualmente una fecha de inicio y vencimiento a un cheque"""
+    fechaInicio = input("Inicio: DD-MM-AAAA ")
+    fechaVencimiento = input("Vencimiento: DD-MM-AAAA ")
+    rangoFecha = fechaInicio + ":" + fechaVencimiento
+    return rangoFecha
+
+#def cerrar_archivo():
+    #lista_datos2.close()
+    #CREAR UNA FUNCION QUE CIERRE EL ARCHIVO O ABRIR CON WITH
+
 def StartApp2():
     """Inicia la App"""
-    # lista_datos = iniciarData()
+    # lista_lista_datos = iniciarData()
     lista_datos2 = iniciarData2() # = [ header, content[] ]
     dni_ingresado = variableDNI() # = dni
+    #dato_filtrado_por_dni_2(dni_ingresado,lista_datos2,'Estado') #PAULO (A BORRAR)
     salida = tipo_Salida() # = salida
     tipoCheque = obtenerTipoCheque() # = tipoCheque
-    estadoCheque = ontenerEstadoCheque() # = estadoCheque o ''
+    estadoCheque = ontenerEstadoCheque(dni_ingresado,tipoCheque) # = estadoCheque o ''
     rangoFecha = obtenerRangoFecha() # = rangoFecha o ''
     checkDni(dni_ingresado, lista_datos2[1], lista_datos2[0].index("DNI"), lista_datos2[0].index("NroCheque"))
     dataFiltrada = filtro(dni_ingresado, tipoCheque, estadoCheque, rangoFecha, lista_datos2)
     for row in dataFiltrada:
         print(row)
-
+    
     # NO BORRAR XD
     # for row in dataFiltrada:
     #     indice = 0
