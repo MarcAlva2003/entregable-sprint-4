@@ -36,13 +36,20 @@ def iniciarData():
             condicion = False 
             return abrir_guardar_datos(nombreArchivo)
 
+def verificarDNI(dni_Ingresado):
+    valido = True
+    print(len(dni_Ingresado))
+    if not(str.isdigit(dni_Ingresado)) or not(len(dni_Ingresado) < 9) or not(len(dni_Ingresado) > 6):
+        valido = False
+    print(len(dni_Ingresado))
+    return valido
 
 def variableDNI():
     """ ingresa el DNI y lo guarda en una variable """
 
     variable_dni = input("Numero DNI : ")
 
-    while  not(str.isdigit(variable_dni)):
+    while not(verificarDNI(variable_dni)):
         print("Dni no valido")
         variable_dni = input("Numero DNI : ")
     
