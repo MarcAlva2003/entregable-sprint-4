@@ -182,35 +182,32 @@ def filtro(dni, tipoCheque, estadoCheque, rangoFecha, data):
 
 
 def dato_filtrado_por_dni_2(dni,lista_datos,dato):
-    """Toma un dni y una lista de lista_datos y retorna la variable buscada"""
-    
-    print(lista_datos[0])
-    indice_dato = -1
-    for elemento in lista_datos[0]:
-        indice_dato += 1
-        if elemento == dato:
-            break
+    """Toma un dni y una lista de lista_datos y retorna la variable buscada en una lista"""
 
-    indice_dni = -1
-    for elemento in lista_datos[0]:
-        indice_dato += 1
-        print(elemento)
-        if elemento == 'DNI':
-            break
+    indice_dni = lista_datos[0].index('DNI')
+    indice_dato = lista_datos[0].index(dato)
 
     lista_auxiliar = [] #lista donde se guardan los mismos datos solicitados para un DNI
     for fila in lista_datos[1]:
         if dni == fila[indice_dni]:
             lista_auxiliar.append(fila[indice_dato])
-    return print(lista_auxiliar)
+    return lista_auxiliar
 
+def Estado_de_cheques(dni,lista_de_datos):
+    """"""
+    Nro_heque = dato_filtrado_por_dni_2(dni,lista_de_datos,'NroCheque')
+    Tipo_cheque = dato_filtrado_por_dni_2(dni,lista_de_datos,'Tipo')
+    Estado_cheque = dato_filtrado_por_dni_2(dni,lista_de_datos,'Estado')
 
-def obtenerTipoCheque():
-    """Ingreso de tipo de cheque"""
-    tipoCheque = input("Cheque EMITIDO o DEPOSITADO? : ")
-    while (tipoCheque != "EMITIDO" and tipoCheque != "DEPOSITADO") or tipoCheque == "":
-        tipoCheque = input('Ingrese un valor correcto(EMITIDO O DEPOSITADO)')
-    return tipoCheque
+    # formato = '{Nro_cheque:^10s} {Tipo_cheque:^10s} {Estado_cheque:^10s}'
+
+    # for posicion in range(0,len(Nro_cheque)):
+    
+    # nro_opcion = -1
+    # for elemento in datos[0]:
+    #     nro_opcion += 1
+    #     print(formato.format(opcion=str(nro_opcion),dato_buscado=str(elemento)))
+    
 
 
 def ontenerEstadoCheque(dni,tipo_cheque):
@@ -220,6 +217,15 @@ def ontenerEstadoCheque(dni,tipo_cheque):
     # while estadoCheque != "PENDIENTE" and estadoCheque != "APROBADO" and estadoCheque != "RECHAZADO" and estadoCheque != "" :
     #     estadoCheque = input('Ingrese un valor correcto(PENDIENTE, APROBADO O RECHAZADO)')
     # return estadoCheque
+    
+
+
+def obtenerTipoCheque():
+    """Ingreso de tipo de cheque"""
+    tipoCheque = input("Cheque EMITIDO o DEPOSITADO? : ")
+    while (tipoCheque != "EMITIDO" and tipoCheque != "DEPOSITADO") or tipoCheque == "":
+        tipoCheque = input('Ingrese un valor correcto(EMITIDO O DEPOSITADO)')
+    return tipoCheque
 
 
 def obtenerRangoFecha():
@@ -238,7 +244,8 @@ def StartApp2():
     # lista_lista_datos = iniciarData()
     lista_datos2 = iniciarData2() # = [ header, content[] ]
     dni_ingresado = variableDNI() # = dni
-    #dato_filtrado_por_dni_2(dni_ingresado,lista_datos2,'Estado') #PAULO (A BORRAR)
+    Estado_de_cheques(dni_ingresado,lista_datos2)
+
     salida = tipo_Salida() # = salida
     tipoCheque = obtenerTipoCheque() # = tipoCheque
     estadoCheque = ontenerEstadoCheque(dni_ingresado,tipoCheque) # = estadoCheque o ''
