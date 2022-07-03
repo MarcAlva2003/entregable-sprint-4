@@ -134,27 +134,55 @@ def dato_filtrado_por_dni(dni,datos):
 # INICIO FILTRO
 # # # # # # # # # # # 
 
-def isDni(dni, indexDni, row):
-    pass
+def filtroPorDni(dni, indexDni, data):
+    """Retorna las filas en las que el DNI conicida"""
+    lineasARetornar  =[]
+    for row in data:
+        if (row[indexDni] == dni):
+            lineasARetornar.append(row)
+    return lineasARetornar
 
 def filtrarPorTipo(tipo, indexTipo, data):
-    pass
+    """Retorna las filas en las que el Tipo de cheque conicida"""
+    lineasARetornar = []
+    for row in data:
+        if (row[indexTipo] == tipo):
+            lineasARetornar.append(row)
+    return lineasARetornar
 
-def filtro(dni, tipoCheque, estadoCheque, rangoFecha, data):
+def filtrarPorEstado(estadoCheque, indexEstado, data):
+    """Retorna las filas en las que el Estado de cheque conicida"""
+    lineasARetornar = []
+    for row in data:
+        if (row[indexEstado] == estadoCheque):
+            lineasARetornar.append(row)
+    return lineasARetornar
+
+def filtrarPorFecha(fechaInicio, fechaFin, indexFechaInicio, indexFechaFin, data):
+    """Retorna las filas en las que el rango de fecha coincida"""
+    lineasARetornar = []
+    for row in data:
+        if (row[indexFechaInicio] == fechaInicio and row[indexFechaFin] == fechaFin):
+            lineasARetornar.append(row)
+    return lineasARetornar
+
+def filtro(dni, tipoCheque, estadoCheque, fechaInicio, fechaFin, data):
     """Retorna la data que se obtinee de data.csv utilizando los parametros ingresados por el cliente"""
     lineasARetornar = []
     indexDni = data[0].index("DNI")
     indexTipo  = data[0].index('Tipo')
+    indexEstado  = data[0].index('Estado')
+    indexFechaInicio = data[0].index('FechaOrigen')
+    indexFechaFin = data[0].index('FechaPago')
     
-    # lista = filtrarDni(data, dni, indexDni)
-    # lista = filtratTipoCheque(lista, tipo indexTIPO)
-    # if not(fecha == ''):
-    #     lista = filtratFecha(lista, tipo indexTIPO)
-    # retutn listra
+    lineasARetornar = filtroPorDni(dni, indexDni, data[1])
+    lineasARetornar = filtrarPorTipo(tipoCheque, indexTipo, lineasARetornar)
+    # OPCIONALES
+    if not(estadoCheque == ''):
+        lineasARetornar = filtrarPorEstado(estadoCheque, indexEstado, lineasARetornar)
+    if not((fechaInicio == '') or (fechaFin == '')):
+        lineasARetornar = filtrarPorFecha(fechaInicio, fechaFin, indexFechaInicio, indexFechaFin, lineasARetornar)
 
-    for row in data[1]:
-        if (row[indexDni] == dni) and (row[indexTipo] == tipoCheque):
-            lineasARetornar.append(row)
 
     return lineasARetornar
 
@@ -234,7 +262,11 @@ def StartApp2():
     estadoCheque = ontenerEstadoCheque(dni_ingresado,tipoCheque) # = estadoCheque o ''
     rangoFecha = obtenerRangoFecha() # = rangoFecha o ''
     checkDni(dni_ingresado, lista_datos2[1], lista_datos2[0].index("DNI"), lista_datos2[0].index("NroCheque"))
-    dataFiltrada = filtro(dni_ingresado, tipoCheque, estadoCheque, rangoFecha, lista_datos2)
+
+    fechaInicioMock = '22-11-2022'
+    fechaFinMock = '29-11-2022'
+
+    dataFiltrada = filtro(dni_ingresado, tipoCheque, estadoCheque, fechaInicioMock, fechaFinMock, lista_datos2)
     for row in dataFiltrada:
         print(row)
 
