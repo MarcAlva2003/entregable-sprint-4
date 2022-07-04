@@ -38,10 +38,10 @@ def iniciarData():
 
 def verificarDNI(dni_Ingresado):
     valido = True
-    print(len(dni_Ingresado))
+    
     if not(str.isdigit(dni_Ingresado)) or not(len(dni_Ingresado) < 11) or not(len(dni_Ingresado) > 6):
         valido = False
-    print(len(dni_Ingresado))
+    
     return valido
 
 def variableDNI():
@@ -281,27 +281,30 @@ StartApp()
 
 def dato_filtrado_por_dni(dni,datos):
     """Toma un dni y una lista de datos y retorna la variable buscada"""
-    
-    formato = '{opcion:^10s} {dato_buscado:^10s}'
-    print('Ingrese el numero de la opcion que desee conocer:\n')
-    print(formato.format(opcion = 'Opcion\n',dato_buscado =''))
 
-    nro_opcion = -1
-    for elemento in datos[0]:
-        nro_opcion += 1
-        print(formato.format(opcion=str(nro_opcion),dato_buscado=str(elemento)))
-    
-    condicion = True
-    while condicion:
-        indice_elegido = int(input('Ingresa el valor REY: '))
-        if indice_elegido <= nro_opcion and indice_elegido >= 0: 
-            condicion = False
-        else:
-            print('Opcion no valida, vuelva a ingresar la opcion')
+    print('Desea conocer otra dato?')
+    respuesta = input('complete si o no: ')
+    if respuesta == 'SI' or respuesta == 'si':
+        formato = '{opcion:^10s} {dato_buscado:^10s}'
+        print('Ingrese el numero de la opcion que desee conocer:\n')
+        print(formato.format(opcion = 'Opcion\n',dato_buscado =''))
 
-    for fila in datos[1]:
-        if dni in fila:
-            print(datos[0][indice_elegido], " :   " ,fila[indice_elegido])
+        nro_opcion = -1
+        for elemento in datos[0]:
+            nro_opcion += 1
+            print(formato.format(opcion=str(nro_opcion),dato_buscado=str(elemento)))
+        
+        condicion = True
+        while condicion:
+            indice_elegido = int(input('Ingresa el valor REY: '))
+            if indice_elegido <= nro_opcion and indice_elegido >= 0: 
+                condicion = False
+            else:
+                print('Opcion no valida, vuelva a ingresar la opcion')
+
+        for fila in datos[1]:
+            if dni in fila:
+                print('Nro cheque: ',fila[0],6*' ',datos[0][indice_elegido], ":  " ,fila[indice_elegido])
 
 
 def filtro_por_dni(dni,lista_datos,dato):
@@ -328,10 +331,20 @@ def Estado_de_cheques(dni,lista_de_datos):
     for posicion in range(0,len(Nro_cheque)):
         print(formato.format(Nro_cheque[posicion],Tipo_cheque[posicion],Estado_cheque[posicion]))
 
+def Consulta_cheque(dni_ingresado,lista_datos):
+    print('Desea consultar el estado de un cheque?')
+    respuesta = input('ingrese si o no: ')
+    if respuesta == 'si' or respuesta == 'SI':
+        Estado_de_cheques(dni_ingresado,lista_datos)
+        
+
+
 def StartAppExtra():
     """Inicia la App Extra"""
 
     lista_datos = iniciarData()
     dni_ingresado = variableDNI()
-    Estado_de_cheques(dni_ingresado,lista_datos)
-    dato_filtrado_por_dni(dni_ingresado,lista_datos)
+    Estado_cheque = Consulta_cheque(dni_ingresado,lista_datos)
+    Otra_informacion = dato_filtrado_por_dni(dni_ingresado,lista_datos)
+
+StartAppExtra()
