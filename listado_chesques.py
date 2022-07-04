@@ -1,5 +1,6 @@
 import csv
 import datetime
+from datetime import date
 
 def abrir_guardar_datos(nombreArchivo):
     """Abre el archivo, guarda los datos en una lista y lo cierra"""
@@ -23,18 +24,26 @@ def abrir_guardar_datos(nombreArchivo):
 
 def iniciarData():
     """Confirma el nombre del Archivo y llama a la funcion "Abrir archivo" """
-
     validacion_archivo = input('Si el nombre del archivo a trabajar es data.csv ingrese SI de otra manera NO:  ')
     condicion = True
-
     while condicion:
         if validacion_archivo == 'SI' or validacion_archivo == 'si':
             condicion = False
             return abrir_guardar_datos('data.csv')
         elif validacion_archivo == 'NO' or validacion_archivo == 'no':
-            nombreArchivo = input("Ingresa el nombre del archivo : ")
             condicion = False 
+            nombreValido = False
+            while not(nombreValido):
+                nombreArchivo = input("Ingresa el nombre del archivo : ")
+                try:
+                    file = open(nombreArchivo, 'r')
+                    file.close()
+                    nombreValido = True
+                except:
+                    nombreArchivo = input("Archivo no encontrado, vuelva a ingresar el nombre: ")
             return abrir_guardar_datos(nombreArchivo)
+        else:
+            validacion_archivo = input("Si el nombre del archivo a trabajar es data.csv ingrese SI de otra manera NO: ")
 
 def verificarDNI(dni_Ingresado):
     valido = True
@@ -225,7 +234,8 @@ def obtenerRangoFecha():
     return [fechaInicio, fechaVto] 
 
 
-def retornarDataCSV(header, data, dni, fechaActual):
+def retornarDataCSV(header, data, dni):
+    fechaActual = str(date.today())
     archivoNuevo = open(dni+fechaActual+'.csv', 'w', newline='')
     archivo = csv.writer(archivoNuevo)
 
@@ -252,23 +262,18 @@ def retornarDataConsola(header, data):
 
 def StartApp():
     """Inicia la App"""
-
     lista_datos = iniciarData() # = [ header, content[] ]
     dni_ingresado = variableDNI() # = dni
     salida = tipo_Salida() # = salida
-
     tipoCheque = obtenerTipoCheque() # = tipoCheque
     estadoCheque = ontenerEstadoCheque(dni_ingresado,tipoCheque) # = estadoCheque o ''
     rangoFecha = obtenerRangoFecha() # = rangoFecha o ''
     if checkDni(dni_ingresado, lista_datos[1], lista_datos[0].index("DNI"), lista_datos[0].index("NroCheque")):
         dataFiltrada = filtro(dni_ingresado, tipoCheque, estadoCheque, rangoFecha[0], rangoFecha[1], lista_datos)
-        fechaActual = '03-07-2022'
         if salida == 'CSV':
-            
-            retornarDataCSV(lista_datos[0], dataFiltrada, dni_ingresado, fechaActual)
+            retornarDataCSV(lista_datos[0], dataFiltrada, dni_ingresado)
         else:
             retornarDataConsola(lista_datos[0], dataFiltrada)
-
 StartApp()
 
 
