@@ -233,6 +233,7 @@ def StartApp():
 
     lista_datos = iniciarData() # = [ header, content[] ]
     dni_ingresado = variableDNI() # = dni
+    # Estado_de_cheques(dni_ingresado,lista_datos)
     salida = tipo_Salida() # = salida
 
     tipoCheque = obtenerTipoCheque() # = tipoCheque
@@ -252,18 +253,41 @@ def StartApp():
     #         indice += 1
     #     print(cadena)
 
+    # indexCuenta = header.index("")
+    headerMock =  ['NroCheque','CodigoBanco','CodigoScurusal','NumeroCuentaOrigen','NumeroCuentaDestino','Valor','FechaOrigen','FechaPago','DNI','Tipo','Estado']
+    fechaActual = '03-07-2022'
 
-    header =  ['NroCheque','CodigoBanco','CodigoScurusal','NumeroCuentaOrigen','NumeroCuentaDestino','Valor','FechaOrigen','FechaPago','DNI','Tipo','Estado']
-    
     dataFiltradaMock = [
-        ['0002','55','44','2432432423','343434343','5559,76','1620183371','1620183371','23665789','EMITIDO','PENDIENTE'],
-        ['0002','55','44','2432432423','343434343','5559,76','1620183371','1620183371','23665789','EMITIDO','PENDIENTE'],
-        ['0002','55','44','2432432423','343434343','5559,76','1620183371','1620183371','23665789','EMITIDO','PENDIENTE'],
-        ['0002','55','44','2432432423','343434343','5559,76','1620183371','1620183371','23665789','EMITIDO','PENDIENTE'],
-    ]
+            ['0002','55','44','2432432423','343434343','5559,76','1620183371','1620183371','23665789','EMITIDO','PENDIENTE'],
+            ['0002','55','44','2432432423','343434343','5559,76','1620183371','1620183371','23665789','EMITIDO','PENDIENTE'],
+            ['0002','55','44','2432432423','343434343','5559,76','1620183371','1620183371','23665789','EMITIDO','PENDIENTE'],
+            ['0002','55','44','2432432423','343434343','5559,76','1620183371','1620183371','23665789','EMITIDO','PENDIENTE'],
+        ]
+
+    if salida == 'CSV':
+        indexFechaInicio = headerMock.index('FechaOrigen')
+        indexFechaFin = headerMock.index('FechaPago')
+        indexValorCheque = headerMock.index('Valor')
+        indexCuentaOrigen = headerMock.index('NumeroCuentaOrigen')
+        indexCuentaDestino = headerMock.index('NumeroCuentaDestino')
+
+        archivoNUevo = open(dni_ingresado+fechaActual+'.csv', 'w', newline='')
+        archivo = csv.writer(archivoNUevo)
+
+        cadenaContenido = ''
+        cadenaHeader = ''
+        cadenaHeader = headerMock[indexFechaInicio],headerMock[indexFechaFin],headerMock[indexValorCheque],headerMock[indexCuentaOrigen],headerMock[indexCuentaDestino]
+        archivo.writerow(cadenaHeader)
+        for row in dataFiltradaMock:
+            cadenaContenido = row[indexFechaInicio],row[indexFechaFin],row[indexValorCheque],row[indexCuentaOrigen],row[indexCuentaDestino]
+        archivo.writerow(cadenaContenido)
+    else:
+        print(headerMock)
+        for row in dataFiltradaMock:
+            print(row)
+
 
     # mostrarValres(dataFiltradaMock, salida);
-
 
     # dato_filtrado = dato_filtrado_por_dni(dni_ingresado,lista_datos)
     # print(dato_filtrado)
