@@ -224,16 +224,37 @@ def obtenerRangoFecha():
 
     return [fechaInicio, fechaVto] 
 
-#def cerrar_archivo():
-    #lista_datos.close()
-    #CREAR UNA FUNCION QUE CIERRE EL ARCHIVO O ABRIR CON WITH
+
+def retornarDataCSV(header, data, dni, fechaActual):
+    archivoNuevo = open(dni+fechaActual+'.csv', 'w', newline='')
+    archivo = csv.writer(archivoNuevo)
+
+    iFechaInicio = header.index('FechaOrigen')
+    iFechaFin = header.index('FechaPago')
+    iValorCheque = header.index('Valor')
+    iCuentaOrigen = header.index('NumeroCuentaOrigen')
+    iCuentaDestino = header.index('NumeroCuentaDestino')
+
+
+    cadenaContenido = ''
+    cadenaHeader = ''
+    cadenaHeader = header[iFechaInicio],header[iFechaFin],header[iValorCheque],header[iCuentaOrigen],header[iCuentaDestino]
+    archivo.writerow(cadenaHeader)
+    for row in data:
+                cadenaContenido = row[iFechaInicio],row[iFechaFin],row[iValorCheque],row[iCuentaOrigen],row[iCuentaDestino]
+                archivo.writerow(cadenaContenido)
+    archivoNuevo.close()
+
+def retornarDataConsola(header, data):
+    print(header)
+    for row in data:
+        print(row)
 
 def StartApp():
     """Inicia la App"""
 
     lista_datos = iniciarData() # = [ header, content[] ]
     dni_ingresado = variableDNI() # = dni
-    # Estado_de_cheques(dni_ingresado,lista_datos)
     salida = tipo_Salida() # = salida
 
     tipoCheque = obtenerTipoCheque() # = tipoCheque
@@ -243,58 +264,10 @@ def StartApp():
         dataFiltrada = filtro(dni_ingresado, tipoCheque, estadoCheque, rangoFecha[0], rangoFecha[1], lista_datos)
         fechaActual = '03-07-2022'
         if salida == 'CSV':
-            indexFechaInicio = lista_datos[0].index('FechaOrigen')
-            indexFechaFin = lista_datos[0].index('FechaPago')
-            indexValorCheque = lista_datos[0].index('Valor')
-            indexCuentaOrigen = lista_datos[0].index('NumeroCuentaOrigen')
-            indexCuentaDestino = lista_datos[0].index('NumeroCuentaDestino')
-
-            archivoNUevo = open(dni_ingresado+fechaActual+'.csv', 'w', newline='')
-            archivo = csv.writer(archivoNUevo)
-
-            cadenaContenido = ''
-            cadenaHeader = ''
-            cadenaHeader = lista_datos[0][indexFechaInicio],lista_datos[0][indexFechaFin],lista_datos[0][indexValorCheque],lista_datos[0][indexCuentaOrigen],lista_datos[0][indexCuentaDestino]
-            archivo.writerow(cadenaHeader)
-            for row in dataFiltrada:
-                cadenaContenido = row[indexFechaInicio],row[indexFechaFin],row[indexValorCheque],row[indexCuentaOrigen],row[indexCuentaDestino]
-            archivo.writerow(cadenaContenido)
+            
+            retornarDataCSV(lista_datos[0], dataFiltrada, dni_ingresado, fechaActual)
         else:
-            print(headerMock)
-            for row in dataFiltrada:
-                print(row)
-
-    # NO BORRAR XD
-    # for row in dataFiltrada:
-    #     indice = 0
-    #     cadena = ''
-    #     for item in row:
-    #         cadena += lista_datos[0][indice] + ' : ' + item + ' - '
-    #         indice += 1
-    #     print(cadena)
-
-    # indexCuenta = header.index("")
-    headerMock =  ['NroCheque','CodigoBanco','CodigoScurusal','NumeroCuentaOrigen','NumeroCuentaDestino','Valor','FechaOrigen','FechaPago','DNI','Tipo','Estado']
-    
-
-    dataFiltradaMock = [
-            ['0002','55','44','2432432423','343434343','5559,76','1620183371','1620183371','23665789','EMITIDO','PENDIENTE'],
-            ['0002','55','44','2432432423','343434343','5559,76','1620183371','1620183371','23665789','EMITIDO','PENDIENTE'],
-            ['0002','55','44','2432432423','343434343','5559,76','1620183371','1620183371','23665789','EMITIDO','PENDIENTE'],
-            ['0002','55','44','2432432423','343434343','5559,76','1620183371','1620183371','23665789','EMITIDO','PENDIENTE'],
-        ]
-
-    
-
-
-    # mostrarValres(dataFiltradaMock, salida);
-
-    # dato_filtrado = dato_filtrado_por_dni(dni_ingresado,lista_datos)
-    # print(dato_filtrado)
-
-    # data = abrirArchivoCSV(valores[0])
-    # if not(checkDni (valores[1], data[1], data[0].index("DNI"), data[0].index("NroCheque"))) :
-    #     print ("El numero de cheque se repite con el mismo DNI")
+            retornarDataConsola(lista_datos[0], dataFiltrada)
 
 StartApp()
 
