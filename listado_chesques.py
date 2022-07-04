@@ -27,10 +27,10 @@ def iniciarData():
     validacion_archivo = input('Si el nombre del archivo a trabajar es data.csv ingrese SI de otra manera NO:  ')
     condicion = True
     while condicion:
-        if validacion_archivo == 'SI' or validacion_archivo == 'si':
+        if validacion_archivo.upper() == 'SI':
             condicion = False
             return abrir_guardar_datos('data.csv')
-        elif validacion_archivo == 'NO' or validacion_archivo == 'no':
+        elif validacion_archivo.upper() == 'NO':
             condicion = False 
             nombreValido = False
             while not(nombreValido):
@@ -82,7 +82,7 @@ def tipo_Salida():
 
     salida = input('ingresa "P" para Pantalla o "CSV" para obtener el archivo : ')
 
-    while (salida != "P" and salida != "CSV") or salida == "":
+    while (salida.upper() != "P" and salida.upper() != "CSV") or salida == "":
         salida = input('Ingrese un valor correcto(P o CSV)')
 
     return salida
@@ -147,29 +147,25 @@ def filtro(dni, tipoCheque, estadoCheque, fechaInicio, fechaFin, data):
 # FIN FILTRO        #
 # # # # # # # # # # # 
 
-def ontenerEstadoCheque(dni,tipo_cheque):
+def obtenerEstadoCheque():
     """Obtiene a partir de un dni y el tipo de cheque su estado"""
-
-    estadoCheque = input("PENDIENTE, APROBADO, RECHAZADO : ")
-
-    while estadoCheque != "PENDIENTE" and estadoCheque != "APROBADO" and estadoCheque != "RECHAZADO" and estadoCheque != "" :
+    estadoCheque = input("Estado PENDIENTE (P), APROBADO (A), RECHAZADO (R) : ")
+    while estadoCheque.upper() != "P" and estadoCheque.upper() != "A" and estadoCheque.upper() != "R" and estadoCheque != "" :
         estadoCheque = input('Ingrese un valor correcto(PENDIENTE, APROBADO O RECHAZADO)')
-
-    return estadoCheque
-    
+    if estadoCheque.upper() == 'P':
+        return 'PENDIENTE'
+    elif estadoCheque.upper() == 'A':
+        return 'APROBADO'
+    return 'RECHAZADO'
 
 def obtenerTipoCheque():
     """Ingreso de tipo de cheque"""
-
-    tipoCheque = input("Cheque EMITIDO o DEPOSITADO? : ")
-
-    while (tipoCheque != "EMITIDO" and tipoCheque != "DEPOSITADO") or tipoCheque == "":
-        tipoCheque = input('Ingrese un valor correcto(EMITIDO O DEPOSITADO)')
-
-    return tipoCheque
-
-
-
+    tipoCheque = input("Cheque EMITIDO (E) o DEPOSITADO (D)? : ")
+    while (tipoCheque.upper() != "E" and tipoCheque.upper() != "D") or tipoCheque == "":
+        tipoCheque = input('Ingrese un valor correcto (EMITIDO (E) o DEPOSITADO (D)): ')
+    if tipoCheque.upper() == 'E':
+        return 'EMITIDO'
+    return 'DEPOSITADO'
 
 def validarFechaInicio():
     """Verifica que la fecha de inicio del cheque sea Valida"""
@@ -205,7 +201,6 @@ def validarFechaVto():
         
         fechaAlReves = ''
     fechaIncorrecta = True
-
     while fechaIncorrecta:
         try:    
             datetime.datetime.strptime(fechaAlReves, '%Y-%m-%d')
@@ -219,31 +214,32 @@ def validarFechaVto():
             except:
                 fechaAlReves = ''
 
-
 def obtenerRangoFecha():
     """Retorna ambas fechas en una lista """
-    ingresarFecha = input('¿Desea ingresar fecha de inicio y fecha de vencimiento?: S/N')
-    if(ingresarFecha  == 'S'):
-        fechaInicio = validarFechaInicio()
-        fechaVto = validarFechaVto()
-    else:
-        return ["",""]
-
+    respuestaValida = False
+    ingresarFecha = input('¿Desea ingresar fecha de inicio y fecha de vencimiento? S/N: ')
+    while not(respuestaValida):
+        if(ingresarFecha.upper()  == 'S'):
+            fechaInicio = validarFechaInicio()
+            fechaVto = validarFechaVto()
+            respuestaValida = True
+        elif ingresarFecha.upper()  == 'N':
+            respuestaValida = True
+            return ["",""]
+        else:
+            ingresarFecha = input('¿Desea ingresar fecha de inicio y fecha de vencimiento? S/N: ')
     return [fechaInicio, fechaVto] 
 
-
 def retornarDataCSV(header, data, dni):
+    """Crear archivo csv y agregarle los datos filtrados"""
     fechaActual = str(date.today())
     archivoNuevo = open(dni+fechaActual+'.csv', 'w', newline='')
     archivo = csv.writer(archivoNuevo)
-
     iFechaInicio = header.index('FechaOrigen')
     iFechaFin = header.index('FechaPago')
     iValorCheque = header.index('Valor')
     iCuentaOrigen = header.index('NumeroCuentaOrigen')
     iCuentaDestino = header.index('NumeroCuentaDestino')
-
-
     cadenaContenido = ''
     cadenaHeader = ''
     cadenaHeader = header[iFechaInicio],header[iFechaFin],header[iValorCheque],header[iCuentaOrigen],header[iCuentaDestino]
@@ -254,30 +250,32 @@ def retornarDataCSV(header, data, dni):
     archivoNuevo.close()
 
 def retornarDataConsola(header, data):
+    """Retornar datos filtrados por consola"""
     print(header)
     for row in data:
         print(row)
 
 def StartApp():
     """Inicia la App"""
-    lista_datos = iniciarData() # = [ header, content[] ]
-    dni_ingresado = variableDNI() # = dni
-    salida = tipo_Salida() # = salida
-    tipoCheque = obtenerTipoCheque() # = tipoCheque
-    estadoCheque = ontenerEstadoCheque(dni_ingresado,tipoCheque) # = estadoCheque o ''
-    rangoFecha = obtenerRangoFecha() # = rangoFecha o ''
+    lista_datos = iniciarData() # LISTO
+    dni_ingresado = variableDNI() # LISTO
+    salida = tipo_Salida() # LISTO
+    tipoCheque = obtenerTipoCheque() # LISTO
+    estadoCheque = obtenerEstadoCheque() #  LISTO
+    rangoFecha = obtenerRangoFecha() #  LISTO
     if checkDni(dni_ingresado, lista_datos[1], lista_datos[0].index("DNI"), lista_datos[0].index("NroCheque")):
         dataFiltrada = filtro(dni_ingresado, tipoCheque, estadoCheque, rangoFecha[0], rangoFecha[1], lista_datos)
-        if salida == 'CSV':
-            retornarDataCSV(lista_datos[0], dataFiltrada, dni_ingresado)
+        if len(dataFiltrada) > 0:
+            if salida.upper() == 'CSV':
+                retornarDataCSV(lista_datos[0], dataFiltrada, dni_ingresado)
+            else:
+                retornarDataConsola(lista_datos[0], dataFiltrada)
         else:
-            retornarDataConsola(lista_datos[0], dataFiltrada)
+            print('No se ha encontrado ningun cheque, por favor, intente con otros parametros.')
 StartApp()
 
-
-
-
-
+############     FUNCIONES EXTRAS     #############
+############     FUNCIONES EXTRAS     #############
 ############     FUNCIONES EXTRAS     #############
 
 """ Son funciones pensadas para que un trabajador del banco busque los datos del cliente a partir de su dni"""
