@@ -337,7 +337,7 @@ def Estado_de_cheques(dni,lista_de_datos):
 def Consulta_cheque(dni_ingresado,lista_datos):
     print('Desea consultar el estado de un cheque?')
     respuesta = input('ingrese si o no: ')
-    if respuesta == 'si' or respuesta == 'SI':
+    if respuesta.upper() == 'SI':
         Estado_de_cheques(dni_ingresado,lista_datos)
         
 
