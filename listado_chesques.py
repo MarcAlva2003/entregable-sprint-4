@@ -238,10 +238,10 @@ def StartApp():
     tipoCheque = obtenerTipoCheque() # = tipoCheque
     estadoCheque = ontenerEstadoCheque(dni_ingresado,tipoCheque) # = estadoCheque o ''
     rangoFecha = obtenerRangoFecha() # = rangoFecha o ''
-    checkDni(dni_ingresado, lista_datos[1], lista_datos[0].index("DNI"), lista_datos[0].index("NroCheque"))
-    dataFiltrada = filtro(dni_ingresado, tipoCheque, estadoCheque, rangoFecha[0], rangoFecha[1], lista_datos)
-    for row in dataFiltrada:
-        print(row)
+    if checkDni(dni_ingresado, lista_datos[1], lista_datos[0].index("DNI"), lista_datos[0].index("NroCheque")):
+        dataFiltrada = filtro(dni_ingresado, tipoCheque, estadoCheque, rangoFecha[0], rangoFecha[1], lista_datos)
+        for row in dataFiltrada:
+            print(row)
 
     # NO BORRAR XD
     # for row in dataFiltrada:
