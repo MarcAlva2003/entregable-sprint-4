@@ -1,7 +1,5 @@
 import csv
-from operator import index
-from sqlite3 import Row
-
+import datetime
 
 def abrir_guardar_datos(nombreArchivo):
     """Abre el archivo, guarda los datos en una lista y lo cierra"""
@@ -38,13 +36,20 @@ def iniciarData():
             condicion = False 
             return abrir_guardar_datos(nombreArchivo)
 
+def verificarDNI(dni_Ingresado):
+    valido = True
+    print(len(dni_Ingresado))
+    if not(str.isdigit(dni_Ingresado)) or not(len(dni_Ingresado) < 11) or not(len(dni_Ingresado) > 6):
+        valido = False
+    print(len(dni_Ingresado))
+    return valido
 
 def variableDNI():
     """ ingresa el DNI y lo guarda en una variable """
 
     variable_dni = input("Numero DNI : ")
 
-    while  not(str.isdigit(variable_dni)):
+    while not(verificarDNI(variable_dni)):
         print("Dni no valido")
         variable_dni = input("Numero DNI : ")
     
@@ -53,7 +58,6 @@ def variableDNI():
 
 def checkDni (dni, content, indexDNI, indexNroCheque):
     """Corrobora si el cheque esta repetido para el mismo DNI"""
-
     nrosCheques = []
     for row in content: 
         if row[indexDNI] == dni:
@@ -77,35 +81,63 @@ def tipo_Salida():
     return salida
 
 # # # # # # # # # # # 
-# INICIO FILTRO
+# INICIO FILTRO     #
 # # # # # # # # # # # 
 
-def isDni(dni, indexDni, row):
-    pass
+def filtroPorDni(dni, indexDni, data):
+    """Retorna las filas en las que el DNI conicida"""
+    lineasARetornar  =[]
+    for row in data:
+        if (row[indexDni] == dni):
+            lineasARetornar.append(row)
+    return lineasARetornar
 
 def filtrarPorTipo(tipo, indexTipo, data):
-    pass
+    """Retorna las filas en las que el Tipo de cheque conicida"""
+    lineasARetornar = []
+    for row in data:
+        if (row[indexTipo] == tipo):
+            lineasARetornar.append(row)
+    return lineasARetornar
 
-def filtro(dni, tipoCheque, estadoCheque, rangoFecha, data):
+def filtrarPorEstado(estadoCheque, indexEstado, data):
+    """Retorna las filas en las que el Estado de cheque conicida"""
+    lineasARetornar = []
+    for row in data:
+        if (row[indexEstado] == estadoCheque):
+            lineasARetornar.append(row)
+    return lineasARetornar
+
+def filtrarPorFecha(fechaInicio, fechaFin, indexFechaInicio, indexFechaFin, data):
+    """Retorna las filas en las que el rango de fecha coincida"""
+    lineasARetornar = []
+    for row in data:
+        if (row[indexFechaInicio] == fechaInicio and row[indexFechaFin] == fechaFin):
+            lineasARetornar.append(row)
+    return lineasARetornar
+
+def filtro(dni, tipoCheque, estadoCheque, fechaInicio, fechaFin, data):
     """Retorna la data que se obtinee de data.csv utilizando los parametros ingresados por el cliente"""
     lineasARetornar = []
     indexDni = data[0].index("DNI")
     indexTipo  = data[0].index('Tipo')
+    indexEstado  = data[0].index('Estado')
+    indexFechaInicio = data[0].index('FechaOrigen')
+    indexFechaFin = data[0].index('FechaPago')
     
-    # lista = filtrarDni(data, dni, indexDni)
-    # lista = filtratTipoCheque(lista, tipo indexTIPO)
-    # if not(fecha == ''):
-    #     lista = filtratFecha(lista, tipo indexTIPO)
-    # retutn listra
+    lineasARetornar = filtroPorDni(dni, indexDni, data[1])
+    lineasARetornar = filtrarPorTipo(tipoCheque, indexTipo, lineasARetornar)
+    # OPCIONALES
+    if not(estadoCheque == ''):
+        lineasARetornar = filtrarPorEstado(estadoCheque, indexEstado, lineasARetornar)
+    if not((fechaInicio == '') or (fechaFin == '')):
+        lineasARetornar = filtrarPorFecha(fechaInicio, fechaFin, indexFechaInicio, indexFechaFin, lineasARetornar)
 
-    for row in data[1]:
-        if (row[indexDni] == dni) and (row[indexTipo] == tipoCheque):
-            lineasARetornar.append(row)
 
     return lineasARetornar
 
 # # # # # # # # # # # 
-# FIN FILTRO
+# FIN FILTRO        #
 # # # # # # # # # # # 
 
 def ontenerEstadoCheque(dni,tipo_cheque):
@@ -130,14 +162,67 @@ def obtenerTipoCheque():
     return tipoCheque
 
 
+
+
+def validarFechaInicio():
+    """Verifica que la fecha de inicio del cheque sea Valida"""
+    fechaInicio = input("Inicio : DD-MM-AAAA ")
+    try:
+        fechaSeparada = fechaInicio.split('-')
+        fechaAlReves = fechaSeparada[2] + '-' + fechaSeparada[1] + '-' + fechaSeparada[0]
+    except:
+        
+        fechaAlReves = ''
+    fechaIncorrecta = True
+
+    while fechaIncorrecta:
+        try:    
+            datetime.datetime.strptime(fechaAlReves, '%Y-%m-%d')
+            fechaIncorrecta = False
+            return fechaInicio
+        except:
+            fechaInicio = input("Ingrese una fecha de inicio Valida : DD-MM-AAAA ")
+            try:
+                fechaSeparada = fechaInicio.split('-')
+                fechaAlReves = fechaSeparada[2] + '-' + fechaSeparada[1] + '-' + fechaSeparada[0]
+            except:
+                fechaAlReves = ''
+
+def validarFechaVto():
+    """Verifica que la fecha de vencimiento del cheque sea Valida"""
+    fechaInicio = input("Vencimiento : DD-MM-AAAA ")
+    try:
+        fechaSeparada = fechaInicio.split('-')
+        fechaAlReves = fechaSeparada[2] + '-' + fechaSeparada[1] + '-' + fechaSeparada[0]
+    except:
+        
+        fechaAlReves = ''
+    fechaIncorrecta = True
+
+    while fechaIncorrecta:
+        try:    
+            datetime.datetime.strptime(fechaAlReves, '%Y-%m-%d')
+            fechaIncorrecta = False
+            return fechaInicio
+        except:
+            fechaInicio = input("Ingrese una fecha de vencimiento valida : DD-MM-AAAA ")
+            try:
+                fechaSeparada = fechaInicio.split('-')
+                fechaAlReves = fechaSeparada[2] + '-' + fechaSeparada[1] + '-' + fechaSeparada[0]
+            except:
+                fechaAlReves = ''
+
+
 def obtenerRangoFecha():
-    """Asigna manualmente una fecha de inicio y vencimiento a un cheque"""
+    """Retorna ambas fechas en una lista """
+    ingresarFecha = input('¿Desea ingresar fecha de inicio y fecha de vencimiento?: S/N')
+    if(ingresarFecha  == 'S'):
+        fechaInicio = validarFechaInicio()
+        fechaVto = validarFechaVto()
+    else:
+        return ["",""]
 
-    fechaInicio = input("Inicio: DD-MM-AAAA ")
-    fechaVencimiento = input("Vencimiento: DD-MM-AAAA ")
-    rangoFecha = fechaInicio + ":" + fechaVencimiento
-
-    return rangoFecha
+    return [fechaInicio, fechaVto] 
 
 #def cerrar_archivo():
     #lista_datos.close()
@@ -146,7 +231,6 @@ def obtenerRangoFecha():
 def StartApp():
     """Inicia la App"""
 
-    # lista_lista_datos = iniciarData()
     lista_datos = iniciarData() # = [ header, content[] ]
     dni_ingresado = variableDNI() # = dni
     # Estado_de_cheques(dni_ingresado,lista_datos)
@@ -156,7 +240,7 @@ def StartApp():
     estadoCheque = ontenerEstadoCheque(dni_ingresado,tipoCheque) # = estadoCheque o ''
     rangoFecha = obtenerRangoFecha() # = rangoFecha o ''
     checkDni(dni_ingresado, lista_datos[1], lista_datos[0].index("DNI"), lista_datos[0].index("NroCheque"))
-    dataFiltrada = filtro(dni_ingresado, tipoCheque, estadoCheque, rangoFecha, lista_datos)
+    dataFiltrada = filtro(dni_ingresado, tipoCheque, estadoCheque, rangoFecha[0], rangoFecha[1], lista_datos)
     for row in dataFiltrada:
         print(row)
 
@@ -169,17 +253,39 @@ def StartApp():
     #         indice += 1
     #     print(cadena)
 
-
-    header =  ['NroCheque','CodigoBanco','CodigoScurusal','NumeroCuentaOrigen','NumeroCuentaDestino','Valor','FechaOrigen','FechaPago','DNI','Tipo','Estado']
+    # indexCuenta = header.index("")
+    headerMock =  ['NroCheque','CodigoBanco','CodigoScurusal','NumeroCuentaOrigen','NumeroCuentaDestino','Valor','FechaOrigen','FechaPago','DNI','Tipo','Estado']
+    fechaActual = '03-07-2022'
 
     dataFiltradaMock = [
-        ['0002','55','44','2432432423','343434343','5559,76','1620183371','1620183371','23665789','EMITIDO','PENDIENTE'],
-        ['0002','55','44','2432432423','343434343','5559,76','1620183371','1620183371','23665789','EMITIDO','PENDIENTE'],
-        ['0002','55','44','2432432423','343434343','5559,76','1620183371','1620183371','23665789','EMITIDO','PENDIENTE'],
-        ['0002','55','44','2432432423','343434343','5559,76','1620183371','1620183371','23665789','EMITIDO','PENDIENTE'],
-    ]
+            ['0002','55','44','2432432423','343434343','5559,76','1620183371','1620183371','23665789','EMITIDO','PENDIENTE'],
+            ['0002','55','44','2432432423','343434343','5559,76','1620183371','1620183371','23665789','EMITIDO','PENDIENTE'],
+            ['0002','55','44','2432432423','343434343','5559,76','1620183371','1620183371','23665789','EMITIDO','PENDIENTE'],
+            ['0002','55','44','2432432423','343434343','5559,76','1620183371','1620183371','23665789','EMITIDO','PENDIENTE'],
+        ]
 
-    # indexCuenta = header.index("")
+    if salida == 'CSV':
+        indexFechaInicio = headerMock.index('FechaOrigen')
+        indexFechaFin = headerMock.index('FechaPago')
+        indexValorCheque = headerMock.index('Valor')
+        indexCuentaOrigen = headerMock.index('NumeroCuentaOrigen')
+        indexCuentaDestino = headerMock.index('NumeroCuentaDestino')
+
+        archivoNUevo = open(dni_ingresado+fechaActual+'.csv', 'w', newline='')
+        archivo = csv.writer(archivoNUevo)
+
+        cadenaContenido = ''
+        cadenaHeader = ''
+        cadenaHeader = headerMock[indexFechaInicio],headerMock[indexFechaFin],headerMock[indexValorCheque],headerMock[indexCuentaOrigen],headerMock[indexCuentaDestino]
+        archivo.writerow(cadenaHeader)
+        for row in dataFiltradaMock:
+            cadenaContenido = row[indexFechaInicio],row[indexFechaFin],row[indexValorCheque],row[indexCuentaOrigen],row[indexCuentaDestino]
+        archivo.writerow(cadenaContenido)
+    else:
+        print(headerMock)
+        for row in dataFiltradaMock:
+            print(row)
+
 
     # mostrarValres(dataFiltradaMock, salida);
 
@@ -196,7 +302,9 @@ StartApp()
 
 
 
-############     FUNCIONES EXTRAS #############
+############     FUNCIONES EXTRAS     #############
+
+""" Son funciones pensadas para que un trabajador del banco busque los datos del cliente a partir de su dni"""
 
 def dato_filtrado_por_dni(dni,datos):
     """Toma un dni y una lista de datos y retorna la variable buscada"""
@@ -218,17 +326,18 @@ def dato_filtrado_por_dni(dni,datos):
         else:
             print('Opcion no valida, vuelva a ingresar la opcion')
 
-    for fila in datos:
+    for fila in datos[1]:
         if dni in fila:
-            return fila[indice_elegido]
+            print(datos[0][indice_elegido], " :   " ,fila[indice_elegido])
 
-def dato_filtrado_por_dni_2(dni,lista_datos,dato):
+
+def filtro_por_dni(dni,lista_datos,dato):
     """Toma un dni y una lista de lista_datos y retorna la variable buscada en una lista"""
 
     indice_dni = lista_datos[0].index('DNI')
     indice_dato = lista_datos[0].index(dato)
 
-    lista_auxiliar = [] #lista donde se guardan los mismos datos solicitados para un DNI
+    lista_auxiliar = []
     for fila in lista_datos[1]:
         if dni == fila[indice_dni]:
             lista_auxiliar.append(fila[indice_dato])
@@ -236,12 +345,20 @@ def dato_filtrado_por_dni_2(dni,lista_datos,dato):
 
 def Estado_de_cheques(dni,lista_de_datos):
     """retorna el estado de cheques para un mismo dni"""
-    Nro_cheque = dato_filtrado_por_dni_2(dni,lista_de_datos,'NroCheque')
-    Tipo_cheque = dato_filtrado_por_dni_2(dni,lista_de_datos,'Tipo')
-    Estado_cheque = dato_filtrado_por_dni_2(dni,lista_de_datos,'Estado')
+    Nro_cheque = filtro_por_dni(dni,lista_de_datos,'NroCheque')
+    Tipo_cheque = filtro_por_dni(dni,lista_de_datos,'Tipo')
+    Estado_cheque = filtro_por_dni(dni,lista_de_datos,'Estado')
 
     formato = '{0:<15s} {1:<15s} {2:<15s}'
 
     print(formato.format('Nro Cheque','Tipo','Estado'))
     for posicion in range(0,len(Nro_cheque)):
         print(formato.format(Nro_cheque[posicion],Tipo_cheque[posicion],Estado_cheque[posicion]))
+
+def StartAppExtra():
+    """Inicia la App Extra"""
+
+    lista_datos = iniciarData()
+    dni_ingresado = variableDNI()
+    Estado_de_cheques(dni_ingresado,lista_datos)
+    dato_filtrado_por_dni(dni_ingresado,lista_datos)
